@@ -11,6 +11,7 @@ const ridersRouter = require('./routes/riders');
 const taxtypesRouter = require('./routes/taxtypes');
 const branchesRouter = require('./routes/branches');
 const subscribeRouter = require('./routes/subscription');
+const loginRouter = require('./routes/login');
 
 //Importing Database Connection
 //const db = require('./dbConnection');
@@ -23,16 +24,8 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is listening at port ${PORT}`));
 
-/*
-db.query('SELECT * FROM clients', (err, rows, fields) => {
-  if (err) throw err
-
-  console.log('The solution is: ', rows[0])
-})
-
-db.end()
-*/
 app.use('/subscribe', subscribeRouter);
+app.use('/login', loginRouter);
 app.use('/client/:clientID/user/:userID/customers', customersRouter);
 app.use('/client/:clientID/user/:userID/categories', categoriesRouter);
 app.use('/client/:clientID/user/:userID/items', itemsRouter);

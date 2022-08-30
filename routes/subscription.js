@@ -53,7 +53,7 @@ subscribeRouter.post('/', (req, res) => {
             return;
         }
         catch (err) {
-            res.send(err);
+            res.status(500).json({msg: "Something went wrong"});
             return;
         }
     })();
