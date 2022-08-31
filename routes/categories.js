@@ -1,8 +1,9 @@
 const express = require('express');
 const categoriesRouter = express.Router();
+const verifyToken = require("../functions/userVarification");
 
-categoriesRouter.get('/', (req, res) => {
-    res.send('Categories Router is responding')
+categoriesRouter.post('/', verifyToken, (req, res) => {
+    res.json({Token: req.token, authData: req.authData})
 });
 
 module.exports = categoriesRouter;

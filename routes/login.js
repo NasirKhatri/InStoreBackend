@@ -12,7 +12,7 @@ const query = util.promisify(db.query).bind(db);
 //Create JSON web Token
 const createTokens = (user) => {
     const accessToken = jwt.sign(
-      { username: user[0].Name, id: user[0].UserID },
+      { username: user[0].Name, clientID: user[0].ClientID, userID: user[0].UserID },
       config.jwtSecret,
       {expiresIn: '5h'}
     );
@@ -39,7 +39,7 @@ loginRouter.post('/', (req, res) => {
                 if(!match) {res.status(400).json({msg: "Invalid Password"}); return}
                 else {
                     const accessToken = createTokens(user);
-                    res.status(200).json({Token: accessToken, UserID: user[0].UserID, ClientID: user[0].ClientID, RoleID: user[0].RoleID, LocalUserID: user[0].LocalUserID });
+                    res.status(200).json({Token: accessToken, UserID: user[0].UserID, ClientID: user[0].ClientID, Name: user[0].Name, RoleID: user[0].RoleID, LocalUserID: user[0].LocalUserID });
                     return;
                 }
             })
