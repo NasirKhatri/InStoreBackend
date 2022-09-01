@@ -27,7 +27,7 @@ app.listen(PORT, () => console.log(`Server is listening at port ${PORT}`));
 app.use('/subscribe', subscribeRouter);
 app.use('/login', loginRouter);
 app.use('/client/:clientID/user/:userID/customers', customersRouter);
-app.use('/client/:clientID/user/:userID/categories', categoriesRouter);
+app.use('/:clientID/categories', categoriesRouter);
 app.use('/client/:clientID/user/:userID/items', itemsRouter);
 app.use('/client/:clientID/user/:userID/users', usersRouter);
 app.use('/client/:clientID/user/:userID/tables', tablesRouter);
