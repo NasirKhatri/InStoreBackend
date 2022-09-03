@@ -39,16 +39,31 @@ categoriesRouter.post('/', verifyToken, (req, res, next) => authorization(req, r
     //destructuring request body
     const clientID = parseInt(req.body.clientID);
     const userID = parseInt(req.body.userID);
-    let imageSource = `uploads/${req.body.clientID}/${req.file.filename}`;
+    const name = req.body.Name;
+    const branches = req.body.Branches;
+    const color = req.body.Color;
+    let imageSource = `uploads/${req.body.clientID}/categories/${req.file.filename}`;
+    const imageInPOS = req.body.ImageInPOS;
+    const visibilityInPOS = req.body.VisibilityInPOS;
 
         try {
             (async () => {
                 //Create Local Category ID
-                const SQL1 = `SELECT Categories FROM counters WHERE ClientID = ${clientID}`;
+                const SQL1 = `SELECT COUNT(ClientID) AS 'Categories' FROM categories WHERE ClientID = ${clientID};`;
                 let counter = await query(SQL1);
-                counter = counter[0]?.Categories + 1;
+                counter = counter[0].Categories + 1;
                 const localCategoryID = 'CT' + ('00' + counter).slice(-3);
-                res.json({ Token: req.token, authData: req.authData })
+                //SQL for Adding Category in the database
+                const SQL2 = `INSERT INTO categories (CategoryID, LocalCategoryID, ClientID, CategoryName, ShowInBranches, CategoryColor, ImageSrc, DisplayInPOS, DisplayImage) 
+                VALUES (NULL, '${localCategoryID}', ${clientID}, '${name}', '${branches}', '${color}', '${imageSource}', ${visibilityInPOS}, ${imageInPOS})`;
+                const addedCategory = await query(SQL2);
+                if(addedCategory.affectedRows > 0) {
+                    res.status(200).json({ msg : "Category have been added"});
+                }
+                else {
+                    res.status(500).json({ msg: "Something went wrong" });   
+                }
+                
             })()
 
         }
