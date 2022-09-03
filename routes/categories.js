@@ -2,34 +2,42 @@ const express = require('express');
 const util = require('util');
 const categoriesRouter = express.Router();
 const verifyToken = require("../functions/userVarification");
-//const multer = require('multer');
-//var path = require('path');
+const multer = require('multer');
+const fs = require('fs');
+var path = require('path');
 
 //Importing Database Connection
 const db = require('../dbConnection');
 const query = util.promisify(db.query).bind(db);
 
-// var storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         console.log("here");
-//         cb(null, '/')
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, file.originalname.replace(".", "_") + Date.now() + path.extname(file.originalname)) //Appending extension
-//     }
-// })
 
-// var upload = multer({ storage: storage });
+// File Uploading through Multer
+var storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const path = `./uploads/${req.body.clientID}/categories`;
+        fs.mkdirSync(path, { recursive: true });
+        return cb(null, path);
+    },
+    filename: function (req, file, cb) {
+        cb(null, req.body.clientID + "_" + "Category_" + file.originalname.replace(".", "_") +"_" + Date.now() + path.extname(file.originalname)) //Appending extension
+    }
+})
 
-categoriesRouter.post('/', verifyToken, /*upload.single('Image'),*/ (req, res) => {
+var upload = multer({ storage: storage });
+
+//Check if user is authorized to upload file
+
+
+
+categoriesRouter.post('/', verifyToken, upload.single('Image'), (req, res) => {
 
     //destructuring request body
-    const clientID = req.body.clientID;
-    const userID = req.body.userID;
-    const roleID = req.body.roleID;
-    //let imageSource = `images/${req.file.filename}`;
+    const clientID = parseInt(req.body.clientID);
+    const userID = parseInt(req.body.userID);
+    const roleID = parseInt(req.body.roleID);
+    let imageSource = `uploads/${req.body.clientID}/${req.file.filename}`;
+    console.log(imageSource);
 
-    //console.log(imageSource);
 
     //Only Admins are allowed to add catergories
     if (roleID !== 1) res.status(403).json({ msg: "Sorry your are not authorized to add categories" });
@@ -39,7 +47,7 @@ categoriesRouter.post('/', verifyToken, /*upload.single('Image'),*/ (req, res) =
                 //Create Local Category ID
                 const SQL1 = `SELECT Categories FROM counters WHERE ClientID = ${clientID}`;
                 let counter = await query(SQL1);
-                counter = counter[0].Categories + 1;
+                counter = counter[0]?.Categories + 1;
                 const localCategoryID = 'CT' + ('00' + counter).slice(-3);
                 res.json({ Token: req.token, authData: req.authData })
             })()
@@ -49,9 +57,7 @@ categoriesRouter.post('/', verifyToken, /*upload.single('Image'),*/ (req, res) =
             res.status(500).json({ msg: "Something went wrong" });
             return;
         }
-
     }
-
 });
 
 module.exports = categoriesRouter;
