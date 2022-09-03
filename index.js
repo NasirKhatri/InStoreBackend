@@ -26,11 +26,11 @@ app.listen(PORT, () => console.log(`Server is listening at port ${PORT}`));
 
 app.use('/subscribe', subscribeRouter);
 app.use('/login', loginRouter);
-app.use('/client/:clientID/user/:userID/customers', customersRouter);
+app.use('/:clientID/customers', customersRouter);
 app.use('/:clientID/categories', categoriesRouter);
-app.use('/client/:clientID/user/:userID/items', itemsRouter);
-app.use('/client/:clientID/user/:userID/users', usersRouter);
-app.use('/client/:clientID/user/:userID/tables', tablesRouter);
-app.use('/client/:clientID/user/:userID/riders', ridersRouter);
-app.use('/client/:clientID/user/:userID/taxtypes', taxtypesRouter);
-app.use('/client/:clientID/user/:userID/branches', branchesRouter);
+app.use('/:clientID/items', itemsRouter);
+app.use('/:clientID/users', usersRouter);
+app.use('/:clientID/tables', tablesRouter);
+app.use('/:clientID/riders', ridersRouter);
+app.use('/:clientID/taxtypes', taxtypesRouter);
+app.use('/:clientID/branches', branchesRouter);
