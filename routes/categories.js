@@ -25,23 +25,22 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-//Check if user is authorized to upload file
+function authorization(req, res, next) {
+    //Only Admins are allowed to add category
+    const roleID = parseInt(req.authData.roleID);
+    if (roleID !== 1) res.status(403).json({ msg: "Sorry your are not authorized to add categories" });
+    else {
+        next();
+    }
+}
 
-
-
-categoriesRouter.post('/', verifyToken, upload.single('Image'), (req, res) => {
+categoriesRouter.post('/', verifyToken, (req, res, next) => authorization(req, res, next), upload.single('Image'), (req, res) => {
 
     //destructuring request body
     const clientID = parseInt(req.body.clientID);
     const userID = parseInt(req.body.userID);
-    const roleID = parseInt(req.body.roleID);
     let imageSource = `uploads/${req.body.clientID}/${req.file.filename}`;
-    console.log(imageSource);
 
-
-    //Only Admins are allowed to add catergories
-    if (roleID !== 1) res.status(403).json({ msg: "Sorry your are not authorized to add categories" });
-    else {
         try {
             (async () => {
                 //Create Local Category ID
@@ -57,7 +56,6 @@ categoriesRouter.post('/', verifyToken, upload.single('Image'), (req, res) => {
             res.status(500).json({ msg: "Something went wrong" });
             return;
         }
-    }
 });
 
 module.exports = categoriesRouter;

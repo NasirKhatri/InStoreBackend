@@ -12,7 +12,7 @@ const query = util.promisify(db.query).bind(db);
 //Create JSON web Token
 const createTokens = (user) => {
     const accessToken = jwt.sign(
-      { username: user[0].Name, clientID: user[0].ClientID, userID: user[0].UserID, roelID: user[0].RoleID },
+      { username: user[0].Name, clientID: user[0].ClientID, userID: user[0].UserID, roleID: user[0].RoleID },
       config.jwtSecret,
       {expiresIn: '5h'}
     );
