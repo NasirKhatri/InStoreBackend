@@ -2,19 +2,20 @@ const express = require('express');
 const ridersRouter = express.Router();
 const util = require('util');
 const verifyToken = require("../functions/userVarification");
+const authorization = require('../functions/authorization');
 
 //Importing Database Connection
 const db = require('../dbConnection');
 const query = util.promisify(db.query).bind(db);
 
-function authorization(req, res, next) {
-    //Only Admins are allowed to add category
-    const roleID = parseInt(req.authData.roleID);
-    if (roleID !== 1) res.status(403).json({ msg: "Sorry your are not authorized to add branches" });
-    else {
-        next();
-    }
-}
+// function authorization(req, res, next) {
+//     //Only Admins are allowed to add category
+//     const roleID = parseInt(req.authData.roleID);
+//     if (roleID !== 1) res.status(403).json({ msg: "Sorry your are not authorized to add branches" });
+//     else {
+//         next();
+//     }
+// }
 
 ridersRouter.post('/', verifyToken, authorization, (req, res) => {
 

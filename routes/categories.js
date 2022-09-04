@@ -2,6 +2,7 @@ const express = require('express');
 const util = require('util');
 const categoriesRouter = express.Router();
 const verifyToken = require("../functions/userVarification");
+const authorization = require('../functions/authorization');
 const multer = require('multer');
 const fs = require('fs');
 var path = require('path');
@@ -25,14 +26,14 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-function authorization(req, res, next) {
+/*function authorization(req, res, next) {
     //Only Admins are allowed to add category
     const roleID = parseInt(req.authData.roleID);
     if (roleID !== 1) res.status(403).json({ msg: "Sorry your are not authorized to add categories" });
     else {
         next();
     }
-}
+}*/
 
 categoriesRouter.post('/', verifyToken, (req, res, next) => authorization(req, res, next), upload.single('Image'), (req, res) => {
 
@@ -53,10 +54,12 @@ categoriesRouter.post('/', verifyToken, (req, res, next) => authorization(req, r
                 let counter = await query(SQL1);
                 counter = counter[0].Categories + 1;
                 const localCategoryID = 'CT' + ('00' + counter).slice(-3);
+
                 //SQL for Adding Category in the database
                 const SQL2 = `INSERT INTO categories (CategoryID, LocalCategoryID, ClientID, CategoryName, ShowInBranches, CategoryColor, ImageSrc, DisplayInPOS, DisplayImage) 
                 VALUES (NULL, '${localCategoryID}', ${clientID}, '${name}', '${branches}', '${color}', '${imageSource}', ${visibilityInPOS}, ${imageInPOS})`;
                 const addedCategory = await query(SQL2);
+
                 if(addedCategory.affectedRows > 0) {
                     res.status(200).json({ msg : "Category have been added"});
                 }
