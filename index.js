@@ -1,5 +1,5 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');     //Someone on Stackoverflow commented it has been deprecated
 
 //Importing Routers
 const customersRouter = require('./routes/customers');
@@ -13,13 +13,12 @@ const branchesRouter = require('./routes/branches');
 const subscribeRouter = require('./routes/subscription');
 const loginRouter = require('./routes/login');
 
-//Importing Database Connection
-//const db = require('./dbConnection');
-
-
 const app = express();
-app.use(bodyParser.urlencoded({extended:false}));
-app.use(bodyParser.json());
+//app.use(bodyParser.urlencoded({extended:false}));
+//app.use(bodyParser.json());
+
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is listening at port ${PORT}`));
