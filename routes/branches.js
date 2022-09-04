@@ -25,15 +25,16 @@ branchesRouter.post('/', verifyToken, authorization, (req, res) => {
     const BranchAddress = req.body.BranchAddress;
     const ContactNumber = req.body.ContactNumber;
 
-    try {
+    
         (async () => {
+            try {
             //Create Local Branch ID
             const SQL1 = `SELECT COUNT(ClientID) AS 'Branches' FROM branches WHERE ClientID = ${clientID};`;
             let counter = await query(SQL1);
             counter = counter[0].Branches + 1;
             const localBranchID = 'BR' + ('00' + counter).slice(-3);
 
-            //SQL for Adding Category in the database
+            //SQL for Adding Branch in the database
             const SQL2 = `INSERT INTO branches (BranchID, LocalBranchID, ClientID, BranchName, BranchAddress, ContactNumber) 
                             VALUES (NULL, '${localBranchID}', ${clientID}, '${BranchName}', '${BranchAddress}', '${ContactNumber}')`;
             const addedBranch = await query(SQL2);
@@ -44,13 +45,13 @@ branchesRouter.post('/', verifyToken, authorization, (req, res) => {
             else {
                 res.status(500).json({ msg: "Something went wrong" });   
             }
-
+        }
+        catch (err) {
+            res.status(500).json({ msg: "Something went wrong" });
+            return;
+        }
         })()
-    }
-    catch (err) {
-        res.status(500).json({ msg: "Something went wrong" });
-        return;
-    }
+
 });
 
 module.exports = branchesRouter;

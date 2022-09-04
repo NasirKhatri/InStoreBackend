@@ -20,7 +20,7 @@ var storage = multer.diskStorage({
         return cb(null, path);
     },
     filename: function (req, file, cb) {
-        cb(null, req.body.clientID + "_" + "Category_" + file.originalname.replace(".", "_") +"_" + Date.now() + path.extname(file.originalname)) //Appending extension
+        cb(null, req.body.clientID + "_" + "Category_" + file.originalname.replace(".", "_") + "_" + Date.now() + path.extname(file.originalname)) //Appending extension
     }
 })
 
@@ -47,33 +47,36 @@ categoriesRouter.post('/', verifyToken, (req, res, next) => authorization(req, r
     const imageInPOS = req.body.ImageInPOS;
     const visibilityInPOS = req.body.VisibilityInPOS;
 
+
+    (async () => {
         try {
-            (async () => {
-                //Create Local Category ID
-                const SQL1 = `SELECT COUNT(ClientID) AS 'Categories' FROM categories WHERE ClientID = ${clientID};`;
-                let counter = await query(SQL1);
-                counter = counter[0].Categories + 1;
-                const localCategoryID = 'CT' + ('00' + counter).slice(-3);
+            //Create Local Category ID
+            const SQL1 = `SELECT COUNT(ClientID) AS 'Categories' FROM categories WHERE ClientID = ${clientID};`;
+            let counter = await query(SQL1);
+            counter = counter[0].Categories + 1;
+            const localCategoryID = 'CT' + ('00' + counter).slice(-3);
 
-                //SQL for Adding Category in the database
-                const SQL2 = `INSERT INTO categories (CategoryID, LocalCategoryID, ClientID, CategoryName, ShowInBranches, CategoryColor, ImageSrc, DisplayInPOS, DisplayImage) 
+            //SQL for Adding Category in the database
+            const SQL2 = `INSERT INTO categories (CategoryID, LocalCategoryID, ClientID, CategoryName, ShowInBranches, CategoryColor, ImageSrc, DisplayInPOS, DisplayImage) 
                 VALUES (NULL, '${localCategoryID}', ${clientID}, '${name}', '${branches}', '${color}', '${imageSource}', ${visibilityInPOS}, ${imageInPOS})`;
-                const addedCategory = await query(SQL2);
+            const addedCategory = await query(SQL2);
 
-                if(addedCategory.affectedRows > 0) {
-                    res.status(200).json({ msg : "Category have been added"});
-                }
-                else {
-                    res.status(500).json({ msg: "Something went wrong" });   
-                }
-                
-            })()
+            if (addedCategory.affectedRows > 0) {
+                res.status(200).json({ msg: "Category have been added" });
+            }
+            else {
+                res.status(500).json({ msg: "Something went wrong" });
+            }
 
         }
         catch (err) {
             res.status(500).json({ msg: "Something went wrong" });
             return;
         }
+
+    })()
+
+
 });
 
 module.exports = categoriesRouter;

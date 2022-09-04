@@ -28,10 +28,9 @@ ridersRouter.post('/', verifyToken, authorization, (req, res) => {
     const ContactNumber = req.body.ContactNumber;
     const Active = req.body.Active;
 
+    (async () => {
 
-    try {
-
-        (async () => {
+        try {
             //Check If rider already exist with client
             const SQL1 = `SELECT EXISTS(SELECT * FROM riders WHERE ContactNumber = '${ContactNumber}' AND ClientID = '${clientID}') AS 'Count'`;
             const riderCheck = await query(SQL1);
@@ -58,14 +57,14 @@ ridersRouter.post('/', verifyToken, authorization, (req, res) => {
                 res.status(500).json({ msg: "Something went wrong" });
             }
 
-        })();
+        }
+        
+        catch (err) {
+            res.status(500).json({ msg: "Something went wrong" });
+            return;
+        }
 
-    }
-    catch (err) {
-        res.status(500).json({ msg: "Something went wrong" });
-        return;
-    }
-
+    })();
 
 });
 
