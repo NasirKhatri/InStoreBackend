@@ -25,9 +25,9 @@ branchesRouter.post('/', verifyToken, authorization, (req, res) => {
     const BranchAddress = req.body.BranchAddress;
     const ContactNumber = req.body.ContactNumber;
 
-    
-        (async () => {
-            try {
+
+    (async () => {
+        try {
             //Create Local Branch ID
             const SQL1 = `SELECT COUNT(ClientID) AS 'Branches' FROM branches WHERE ClientID = ${clientID};`;
             let counter = await query(SQL1);
@@ -39,18 +39,18 @@ branchesRouter.post('/', verifyToken, authorization, (req, res) => {
                             VALUES (NULL, '${localBranchID}', ${clientID}, '${BranchName}', '${BranchAddress}', '${ContactNumber}')`;
             const addedBranch = await query(SQL2);
 
-            if(addedBranch.affectedRows > 0) {
-                res.status(200).json({ msg : "Branch have been added"});
+            if (addedBranch.affectedRows > 0) {
+                res.status(200).json({ msg: "Branch have been added" });
             }
             else {
-                res.status(500).json({ msg: "Something went wrong" });   
+                res.status(500).json({ msg: "Something went wrong" });
             }
         }
         catch (err) {
             res.status(500).json({ msg: "Something went wrong" });
             return;
         }
-        })()
+    })()
 
 });
 

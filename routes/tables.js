@@ -31,7 +31,6 @@ tablesRouter.post('/', verifyToken, authorization, (req, res) => {
             const SQL2 = `INSERT INTO tables (TableID, LocalTableID, ClientID, TableName, BranchID) 
                             VALUES (NULL, '${localTableID}', ${clientID}, '${TableName}', '${BranchID}')`;
             const addedTable = await query(SQL2);
-            console.log(addedTable);
 
             if (addedTable.affectedRows > 0) {
                 res.status(200).json({ msg: "Table have been added" });
@@ -40,7 +39,7 @@ tablesRouter.post('/', verifyToken, authorization, (req, res) => {
                 res.status(500).json({ msg: "Something went wrong" });
             }
         }
-        
+
         catch (err) {
             res.status(500).json({ msg: "Something went wrong" });
             return;
