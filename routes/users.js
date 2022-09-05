@@ -50,7 +50,7 @@ usersRouter.post('/', verifyToken, authorization, (req, res) => {
 
             //Add User in Database
             const SQL3 = `INSERT INTO users (UserID, ClientID, Gender, Email, PhoneNumber, Password, Address, DOB, CNIC, Active, LastUpdated, RoleID, LocalUserID, Name) 
-            VALUES (NULL, ${clientID}, '${Gender}', '${Email}', '${PhoneNo}', '${hash}', '${Address}', '${DOB}', '${CNIC}', ${Active}, '${todayDate}', ${UserRole}, '${localUserID}', '${Name}')`;
+            VALUES (NULL, ${clientID}, '${Gender}', '${Email}', '${ContactNumber}', '${hash}', '${Address}', '${DOB}', '${CNIC}', ${Active}, '${todayDate}', ${UserRole}, '${localUserID}', '${Name}')`;
             const addedUser = await query(SQL3);
 
             if (addedUser.affectedRows > 0) {
