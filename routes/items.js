@@ -26,7 +26,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-itemsRouter.post('/', verifyToken, authorization, upload.single('Image'), (req, res) => {
+itemsRouter.post('/additem', verifyToken, authorization, upload.single('Image'), (req, res) => {
 
         //destructuring request body
         const clientID = parseInt(req.body.clientID);

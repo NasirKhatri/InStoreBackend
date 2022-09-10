@@ -9,7 +9,7 @@ const db = require('../dbConnection');
 const query = util.promisify(db.query).bind(db);
 
 
-tablesRouter.post('/', verifyToken, authorization, (req, res) => {
+tablesRouter.post('/addtable', verifyToken, authorization, (req, res) => {
 
     //destructuring request body
     const clientID = parseInt(req.body.clientID);

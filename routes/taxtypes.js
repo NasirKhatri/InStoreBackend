@@ -8,7 +8,7 @@ const authorization = require('../functions/authorization');
 const db = require('../dbConnection');
 const query = util.promisify(db.query).bind(db);
 
-taxtypesRouter.post('/', verifyToken, authorization, (req, res) => {
+taxtypesRouter.post('/addtaxtype', verifyToken, authorization, (req, res) => {
 
     //destructuring request body
     const clientID = parseInt(req.body.clientID);

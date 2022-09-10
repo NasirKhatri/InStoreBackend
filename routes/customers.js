@@ -17,7 +17,7 @@ const query = util.promisify(db.query).bind(db);
 //     }
 // }
 
-customersRouter.post('/', verifyToken, authorization, (req, res) => {
+customersRouter.post('/addcustomer', verifyToken, authorization, (req, res) => {
     // Destructuring Request Body
     const clientID = parseInt(req.body.clientID);
     const userID = parseInt(req.body.userID);

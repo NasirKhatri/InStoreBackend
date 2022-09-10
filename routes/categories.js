@@ -35,7 +35,7 @@ var upload = multer({ storage: storage });
     }
 }*/
 
-categoriesRouter.post('/', verifyToken, (req, res, next) => authorization(req, res, next), upload.single('Image'), (req, res) => {
+categoriesRouter.post('/addcategory', verifyToken, (req, res, next) => authorization(req, res, next), upload.single('Image'), (req, res) => {
 
     //destructuring request body
     const clientID = parseInt(req.body.clientID);
