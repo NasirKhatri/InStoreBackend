@@ -3,19 +3,11 @@ const util = require('util');
 const branchesRouter = express.Router();
 const verifyToken = require("../functions/userVarification");
 const authorization = require('../functions/authorization');
+const verifyParams = require('../functions/verifyParams');
 
 //Importing Database Connection
 const db = require('../dbConnection');
 const query = util.promisify(db.query).bind(db);
-
-/*function authorization(req, res, next) {
-    //Only Admins are allowed to add category
-    const roleID = parseInt(req.authData.roleID);
-    if (roleID !== 1) res.status(403).json({ msg: "Sorry your are not authorized to add branches" });
-    else {
-        next();
-    }
-}*/
 
 branchesRouter.post('/addbranch', verifyToken, authorization, (req, res) => {
     //destructuring request body
@@ -53,5 +45,20 @@ branchesRouter.post('/addbranch', verifyToken, authorization, (req, res) => {
     })()
 
 });
+
+branchesRouter.get('/:clientID', verifyToken, verifyParams, (req, res) => {
+    const clientID = req.params.clientID;
+    (async () => {
+        try {
+            const SQL1 = `SELECT * FROM branches WHERE ClientID = ${clientID} AND Deleted = 'No'`;
+            let branches = await query(SQL1);
+            res.status(200).send(branches);
+        }
+        catch(err) {
+            res.status(500).json({msg: "Something went wrong"});
+        }
+
+    })()
+})
 
 module.exports = branchesRouter;
