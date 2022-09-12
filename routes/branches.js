@@ -52,7 +52,7 @@ branchesRouter.get('/:clientID', verifyToken, verifyParams, (req, res) => {
         try {
             const SQL1 = `SELECT * FROM branches WHERE ClientID = ${clientID} AND Deleted = 'No'`;
             let branches = await query(SQL1);
-            res.status(200).send(branches);
+            res.status(200).json(branches);
         }
         catch(err) {
             res.status(500).json({msg: "Something went wrong"});
