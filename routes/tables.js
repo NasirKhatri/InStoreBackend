@@ -14,7 +14,7 @@ tablesRouter.post('/addtable', verifyToken, authorization, (req, res) => {
     //destructuring request body
     const clientID = parseInt(req.body.clientID);
     const userID = parseInt(req.body.userID);
-    const BranchID = req.body.BranchID;
+    const BranchID = req.body.Branch;
     const TableName = req.body.TableName;
 
 

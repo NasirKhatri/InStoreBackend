@@ -23,7 +23,7 @@ ridersRouter.post('/addrider', verifyToken, authorization, (req, res) => {
     const clientID = parseInt(req.body.clientID);
     const userID = parseInt(req.body.userID);
     const Name = req.body.Name;
-    const BranchID = req.body.BranchID;
+    const BranchID = req.body.Branch;
     const LicenseNumber = req.body.LicenseNumber;
     const ContactNumber = req.body.ContactNumber;
     const Active = req.body.Active;
@@ -35,7 +35,7 @@ ridersRouter.post('/addrider', verifyToken, authorization, (req, res) => {
             const SQL1 = `SELECT EXISTS(SELECT * FROM riders WHERE ContactNumber = '${ContactNumber}' AND ClientID = '${clientID}') AS 'Count'`;
             const riderCheck = await query(SQL1);
             if (riderCheck[0].Count) {
-                res.status(400).json({ msg: 'Rider Already Exist With Provided Email or Phone Number' });
+                res.status(400).json({ msg: 'Rider Already Exist With Provided Phone Number' });
                 return;
             }
 
