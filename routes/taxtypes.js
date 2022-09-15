@@ -3,6 +3,7 @@ const taxtypesRouter = express.Router();
 const util = require('util');
 const verifyToken = require("../functions/userVarification");
 const authorization = require('../functions/authorization');
+const verifyParams = require('../functions/verifyParams');
 
 //Importing Database Connection
 const db = require('../dbConnection');
@@ -45,5 +46,21 @@ taxtypesRouter.post('/addtaxtype', verifyToken, authorization, (req, res) => {
         }
     })()
 });
+
+
+taxtypesRouter.get('/:clientID', verifyToken, verifyParams, (req, res) => {
+    const clientID = req.params.clientID;
+    (async () => {
+        try {
+            const SQL1 = `SELECT * FROM taxtypes WHERE ClientID = ${clientID} AND Deleted = 'No'`;
+            let taxtypes = await query(SQL1);
+            res.status(200).json(taxtypes);
+        }
+        catch(err) {
+            res.status(500).json({msg: "Something went wrong"});
+        }
+
+    })()
+})
 
 module.exports = taxtypesRouter;

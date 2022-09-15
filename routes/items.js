@@ -15,12 +15,12 @@ const query = util.promisify(db.query).bind(db);
 // File Uploading through Multer
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const path = `./uploads/${req.body.clientID}/items`;
+        const path = `./uploads/${parseInt(req.body.clientID)}/items`;
         fs.mkdirSync(path, { recursive: true });
         return cb(null, path);
     },
     filename: function (req, file, cb) {
-        cb(null, req.body.clientID + "_" + "Item_" + file.originalname.replace(".", "_") + "_" + Date.now() + path.extname(file.originalname)) //Appending extension
+        cb(null, parseInt(req.body.clientID) + "_" + "Item_" + file.originalname.replace(".", "_") + "_" + Date.now() + path.extname(file.originalname)) //Appending extension
     }
 })
 
@@ -32,13 +32,13 @@ itemsRouter.post('/additem', verifyToken, authorization, upload.single('Image'),
         const clientID = parseInt(req.body.clientID);
         const userID = parseInt(req.body.userID);
         const name = req.body.Name;
-        let imageSource = `uploads/${req.body.clientID}/items/${req.file.filename}`;
+        let imageSource = `uploads/${clientID}/items/${req.file.filename}`;
         const imageInPOS = req.body.ImageInPOS;
         const visibilityInPOS = req.body.VisibilityInPOS;
-        const categoryID = parseInt(req.body.CategoryID);
+        const categoryID = parseInt(req.body.Category);
         const discount = parseFloat(req.body.Discount);
-        const saleRate = parseFloat(req.body.SaleRate);
-        const taxID = parseInt(req.body.TaxID);
+        const saleRate = parseFloat(req.body.SalesRate);
+        const taxID = parseInt(req.body.TaxType);
         const netPrice  = parseFloat(req.body.NetPrice);
         const uom = req.body.UOM;
 

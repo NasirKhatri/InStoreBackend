@@ -3,6 +3,8 @@ const util = require('util');
 const categoriesRouter = express.Router();
 const verifyToken = require("../functions/userVarification");
 const authorization = require('../functions/authorization');
+const verifyParams = require('../functions/verifyParams');
+
 const multer = require('multer');
 const fs = require('fs');
 var path = require('path');
@@ -68,5 +70,20 @@ categoriesRouter.post('/addcategory', verifyToken, authorization, upload.single(
 
 
 });
+
+categoriesRouter.get('/:clientID', verifyToken, verifyParams, (req, res) => {
+    const clientID = req.params.clientID;
+    (async () => {
+        try {
+            const SQL1 = `SELECT * FROM categories WHERE ClientID = ${clientID} AND Deleted = 'No'`;
+            let categories = await query(SQL1);
+            res.status(200).json(categories);
+        }
+        catch(err) {
+            res.status(500).json({msg: "Something went wrong"});
+        }
+
+    })()
+})
 
 module.exports = categoriesRouter;
