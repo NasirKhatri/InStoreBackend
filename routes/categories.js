@@ -28,7 +28,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-categoriesRouter.post('/addcategory', verifyToken, authorization, upload.single('Image'), (req, res) => {
+categoriesRouter.post('/addcategory', verifyToken, authorization([1]), upload.single('Image'), (req, res) => {
     //destructuring request body
     const clientID = parseInt(req.body.clientID);
     const userID = parseInt(req.body.userID);

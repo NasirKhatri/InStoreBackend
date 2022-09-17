@@ -9,7 +9,7 @@ const bcrypt = require('bcrypt');
 const db = require('../dbConnection');
 const query = util.promisify(db.query).bind(db);
 
-usersRouter.post('/adduser', verifyToken, authorization, (req, res) => {
+usersRouter.post('/adduser', verifyToken, authorization([1]), (req, res) => {
 
     //destructuring request body
     const clientID = parseInt(req.body.clientID);

@@ -9,7 +9,7 @@ const verifyParams = require('../functions/verifyParams');
 const db = require('../dbConnection');
 const query = util.promisify(db.query).bind(db);
 
-taxtypesRouter.post('/addtaxtype', verifyToken, authorization, (req, res) => {
+taxtypesRouter.post('/addtaxtype', verifyToken, authorization([1]), (req, res) => {
 
     //destructuring request body
     const clientID = parseInt(req.body.clientID);
