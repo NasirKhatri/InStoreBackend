@@ -36,7 +36,7 @@ itemsRouter.post('/additem', verifyToken, authorization, upload.single('Image'),
         const imageInPOS = req.body.ImageInPOS;
         const visibilityInPOS = req.body.VisibilityInPOS;
         const categoryID = parseInt(req.body.Category);
-        const discount = parseFloat(req.body.Discount);
+        const discount = req.body.Discount ? parseFloat(req.body.Discount) : 0;
         const saleRate = parseFloat(req.body.SalesRate);
         const taxID = parseInt(req.body.TaxType);
         const netPrice  = parseFloat(req.body.NetPrice);
