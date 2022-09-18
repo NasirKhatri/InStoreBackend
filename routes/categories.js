@@ -71,6 +71,21 @@ categoriesRouter.post('/addcategory', verifyToken, authorization([1]), upload.si
 
 });
 
+categoriesRouter.get('/:clientID/POS', verifyToken, verifyParams, (req, res) => {
+    const clientID = req.params.clientID;
+    (async () => {
+        try {
+            const SQL1 = `SELECT * FROM categories WHERE ClientID = ${clientID} AND Deleted = 'No' AND DisplayInPOS = true`;
+            let categories = await query(SQL1);
+            res.status(200).json(categories);
+        }
+        catch(err) {
+            res.status(500).json({msg: "Something went wrong"});
+        }
+
+    })()
+});
+
 categoriesRouter.get('/:clientID', verifyToken, verifyParams, (req, res) => {
     const clientID = req.params.clientID;
     (async () => {
@@ -84,6 +99,7 @@ categoriesRouter.get('/:clientID', verifyToken, verifyParams, (req, res) => {
         }
 
     })()
-})
+});
+
 
 module.exports = categoriesRouter;
