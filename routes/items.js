@@ -3,6 +3,7 @@ const itemsRouter = express.Router();
 const util = require('util');
 const verifyToken = require("../functions/userVarification");
 const authorization = require('../functions/authorization');
+const verifyParams = require('../functions/verifyParams');
 
 const multer = require('multer');
 const fs = require('fs');
@@ -70,5 +71,21 @@ itemsRouter.post('/additem', verifyToken, authorization([1]), upload.single('Ima
             }
         })();
 });
+
+
+itemsRouter.get('/:clientID', verifyToken, verifyParams, (req, res) => {
+    const clientID = req.params.clientID;
+    (async () => {
+        try {
+            const SQL1 = `SELECT items.*, categories.CategoryColor FROM items JOIN categories ON items.CategoryID = categories.CategoryID WHERE items.ClientID = ${clientID} AND items.Deleted = 'NO' AND categories.DisplayInPOS = true AND items.DisplayInPOS = true AND categories.Deleted = 'NO' `;
+            let items = await query(SQL1);
+            res.status(200).json(items);
+        }
+        catch(err) {
+            res.status(500).json({msg: "Something went wrong"});
+        }
+
+    })()
+})
 
 module.exports = itemsRouter;
