@@ -77,7 +77,7 @@ itemsRouter.get('/:clientID', verifyToken, verifyParams, (req, res) => {
     const clientID = req.params.clientID;
     (async () => {
         try {
-            const SQL1 = `SELECT items.*, categories.CategoryColor FROM items JOIN categories ON items.CategoryID = categories.CategoryID WHERE items.ClientID = ${clientID} AND items.Deleted = 'NO' AND categories.DisplayInPOS = true AND items.DisplayInPOS = true AND categories.Deleted = 'NO' `;
+            const SQL1 = `SELECT items.*, taxtypes.*, categories.CategoryColor FROM items JOIN categories ON items.CategoryID = categories.CategoryID JOIN taxtypes ON items.TaxID = taxtypes.TaxTypeID WHERE items.ClientID = ${clientID} AND items.Deleted = 'NO' AND categories.DisplayInPOS = true AND items.DisplayInPOS = true AND categories.Deleted = 'NO';`;
             let items = await query(SQL1);
             res.status(200).json(items);
         }
