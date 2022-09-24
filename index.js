@@ -12,6 +12,7 @@ const taxtypesRouter = require('./routes/taxtypes');
 const branchesRouter = require('./routes/branches');
 const subscribeRouter = require('./routes/subscription');
 const loginRouter = require('./routes/login');
+const salesRouter = require('./routes/sales');
 
 const app = express();
 //app.use(bodyParser.urlencoded({extended:false}));
@@ -33,3 +34,4 @@ app.use('/tables', tablesRouter);
 app.use('/riders', ridersRouter);
 app.use('/taxtypes', taxtypesRouter);
 app.use('/branches', branchesRouter);
+app.use('/sales', salesRouter);
