@@ -52,16 +52,39 @@ salesRouter.post('/:clientID', verifyToken, authorization([1, 2, 4, 8]), verifyP
                     ${grossPrice}, ${lineItemDiscount}, ${additionalDiscount}, ${taxAmount}, '${paymentMode}', ${billAmount}, ${receivedAmount}, 
                         ${returnedAmount}, ${balance}, NULL, NULL, ${saleTypeID}, '${paymentStatus}', ${statusCode})`;
             const addedSale = await query(SQL2);
-            res.send(addedSale);
+            const saleID = addedSale.insertId;
+
+            //Adding Sale Lines in the database
+            const values = itemDetails.map(item => {
+                let TaxAmount = 0;
+                let ItemDisc = 0;
+                let Total = 0;
+
+                if (!item.TaxBfrDisc) {
+                    ItemDisc = (item.SalesPrice * (item.Discount / 100)) * item.Qty;
+                    TaxAmount = parseFloat((((item.SalesPrice - item.SalesPrice * (item.Discount / 100)) * (taxDetails.TaxRate / 100)) * item.Qty).toFixed(2));
+                }
+                else {
+                    ItemDisc = (item.SalesPrice * (item.Discount / 100)) * item.Qty;
+                    TaxAmount = parseFloat(((item.SalesPrice * (item.TaxRate / 100)) * item.Qty).toFixed(2));
+                }
+
+                Total = (item.Qty * item.SalesPrice - ItemDisc + TaxAmount).toFixed(2);
+
+                return `(NULL, ${clientID}, ${saleID}, ${item.ItemID}, ${item.Qty}, ${item.SalesPrice}, ${item.Discount}, ${item.TaxTypeID}, ${item.TaxBfrDisc}, ${TaxAmount}, ${Total}, 'Open')`
+            })
+
+            const SQL3 = `INSERT INTO salelines VALUES ${values}`;
+            const addedLines = await query(SQL3);
+
+            res.status(200).json({ msg: "Sale have been added" });
 
         }
         catch (err) {
-
+            res.status(500).json({ msg: "Something went wrong" });
         }
 
     })()
 })
-
-
 
 module.exports = salesRouter;
