@@ -18,7 +18,7 @@ salesRouter.post('/:clientID', verifyToken, authorization([1, 2, 4, 8]), verifyP
     const roleID = parseInt(req.body.roleID);
 
     const itemDetails = req.body.itemDetails;
-    const saleDate = req.body.saleDate;
+    let saleDate = req.body.saleDate;
     const paymentMode = req.body.paymentMode;
     const receivedAmount = req.body.receivedAmount;
     const returnedAmount = req.body.returnedAmount;
@@ -34,6 +34,10 @@ salesRouter.post('/:clientID', verifyToken, authorization([1, 2, 4, 8]), verifyP
     const saleTypeID = parseInt(req.body.saleTypeID);
     const paymentStatus = req.body.paymentStatus;
     const statusCode = parseInt(req.body.statusCode);
+
+    let time = new Date();
+    time = ("00" + time.getHours()).slice(-2) + ":" + ("00" + time.getMinutes()).slice(-2) + ":" + ("00" + time.getSeconds()).slice(-2);
+    saleDate = saleDate + " " + time;
 
     (async () => {
         try {
