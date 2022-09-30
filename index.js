@@ -24,6 +24,8 @@ app.use(express.json());
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server is listening at port ${PORT}`));
 
+app.use(express.static('uploads'));
+
 app.use('/subscribe', subscribeRouter);
 app.use('/login', loginRouter);
 app.use('/customers', customersRouter);

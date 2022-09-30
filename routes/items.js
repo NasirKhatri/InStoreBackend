@@ -33,7 +33,7 @@ itemsRouter.post('/additem', verifyToken, authorization([1]), upload.single('Ima
         const clientID = parseInt(req.body.clientID);
         const userID = parseInt(req.body.userID);
         const name = req.body.Name;
-        let imageSource = `uploads/${clientID}/items/${req.file.filename}`;
+        let imageSource = `${clientID}/items/${req.file.filename}`;
         const imageInPOS = req.body.ImageInPOS;
         const visibilityInPOS = req.body.VisibilityInPOS;
         const categoryID = parseInt(req.body.Category);

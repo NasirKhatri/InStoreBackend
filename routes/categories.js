@@ -35,7 +35,7 @@ categoriesRouter.post('/addcategory', verifyToken, authorization([1]), upload.si
     const name = req.body.Name;
     const branches = req.body.Branches;
     const color = req.body.Color;
-    let imageSource = `uploads/${clientID}/categories/${req.file.filename}`;
+    let imageSource = `${clientID}/categories/${req.file.filename}`;
     const imageInPOS = req.body.ImageInPOS;
     const visibilityInPOS = req.body.VisibilityInPOS;
 
