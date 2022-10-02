@@ -6,6 +6,7 @@ const authorization = require('../functions/authorization');
 
 //Importing Database Connection
 const db = require('../dbConnection');
+const verifyParams = require('../functions/verifyParams');
 const query = util.promisify(db.query).bind(db);
 
 
@@ -48,5 +49,22 @@ tablesRouter.post('/addtable', verifyToken, authorization([1]), (req, res) => {
 
 
 });
+
+tablesRouter.get('/:clientID/branch/:branchID', verifyToken, verifyParams, (req, res) => {
+    const clientID = req.params.clientID;
+    const branchID = req.params.branchID;
+
+    (async () => {
+        try {
+            const SQL1 = `SELECT * FROM tables WHERE ClientID = ${clientID} AND BranchID = ${branchID} AND Deleted = 'No'`;
+            let tables = await query(SQL1);
+            res.status(200).json(tables);
+        }
+        catch(err) {
+            res.status(500).json({msg: "Something went wrong"});
+        }
+
+    })()
+}) 
 
 module.exports = tablesRouter;
